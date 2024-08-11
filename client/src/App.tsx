@@ -1,10 +1,15 @@
-import { Button } from './components/ui/button';
+import ChatFeed from './components/ChatFeed';
+import Header from './components/Header';
+import MainContentContainer from './components/MainContentContainer';
 
 function App() {
 	return (
-		<main className='p-5'>
-			<h1>Hello World!</h1>
-			<Button size='sm'>Click Me</Button>
+		<main className='flex flex-col h-dvh'>
+			<Header />
+			<MainContentContainer>
+				<ChatFeed />
+				{/* <CreateMessageForm/> */}
+			</MainContentContainer>
 		</main>
 	);
 }

@@ -1,7 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { HttpError } from './errors/httpError';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 
 import messageRouter from './routes/message';
 
