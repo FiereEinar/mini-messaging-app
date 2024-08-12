@@ -18,13 +18,13 @@ export default function ChatFeed() {
 	}
 
 	return (
-		<div className='flex flex-col p-3'>
+		<div className='flex flex-col flex-grow gap-3'>
 			{data?.map((message) => (
 				<div
 					className={`${user === message.sender && 'ml-auto'}`}
 					key={message.id}
 				>
-					<p>{message.message}</p>
+					<p style={{ whiteSpace: 'pre-wrap' }}>{message.message}</p>
 					<small>
 						By: {user === message.sender ? 'You' : message.sender} on{' '}
 						{new Date(message.date).toLocaleDateString()}
