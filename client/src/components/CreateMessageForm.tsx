@@ -50,9 +50,13 @@ export default function CreateMessageForm() {
 		<>
 			<form
 				onSubmit={handleSubmit(onSubmitHandler)}
-				className='flex flex-shrink-0'
+				className='flex flex-shrink-0 px-3'
 			>
-				<Input {...register('message')} placeholder='Send a message...' />
+				<Input
+					{...register('message')}
+					className='bg-dark-200 border-dark-400'
+					placeholder='Send a message...'
+				/>
 				<Button disabled={isSubmitting}>Send</Button>
 			</form>
 			{errors.root && (

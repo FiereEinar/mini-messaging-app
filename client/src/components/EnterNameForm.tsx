@@ -14,10 +14,11 @@ export default function EnterNameForm() {
 	};
 
 	return (
-		<div className='absolute backdrop-blur-sm bg-white/30 w-screen h-screen flex justify-center pt-[10rem]'>
+		<div className='absolute backdrop-blur-sm bg-dark/90 w-screen h-screen flex justify-center pt-[10rem]'>
 			<div className='w-fit flex flex-col items-center gap-3'>
 				<label htmlFor='name'>Enter your name:</label>
 				<Input
+					className='bg-dark-300'
 					onChange={(e) => setName(e.target.value)}
 					type='text'
 					id='name'

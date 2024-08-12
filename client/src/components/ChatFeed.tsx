@@ -36,10 +36,23 @@ export default function ChatFeed() {
 		return <p>An error occured while fetching messages</p>;
 	}
 
+	if (data) {
+		console.log(data[0].date.toString().split('T')[0]);
+	}
+
 	return (
 		<div className='flex flex-col overflow-y-scroll gap-3 p-3'>
-			{data?.map((message) => (
-				<ChatMessage key={message.id} message={message} />
+			{data?.map((message, i, messages) => (
+				<div className='flex flex-col items-center' key={message.id}>
+					{i !== 0 &&
+						message.date.toString().split('T')[0] !==
+							messages[i - 1].date.toString().split('T')[0] && (
+							<p className='m-auto'>
+								{new Date(message.date).toLocaleDateString()}
+							</p>
+						)}
+					<ChatMessage message={message} />
+				</div>
 			))}
 			<div ref={bottomRef} />
 		</div>
