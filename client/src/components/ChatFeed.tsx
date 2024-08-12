@@ -37,7 +37,7 @@ export default function ChatFeed() {
 	}
 
 	return (
-		<div className='flex flex-col overflow-y-scroll gap-3'>
+		<div className='flex flex-col overflow-y-scroll gap-3 p-3'>
 			{data?.map((message) => (
 				<ChatMessage key={message.id} message={message} />
 			))}

@@ -1,3 +1,8 @@
 import { io } from 'socket.io-client';
 
-export const socket = io('ws://192.168.1.12:3000');
+const URL =
+	import.meta.env.VITE_DEV_TYPE === 'host'
+		? import.meta.env.VITE_BASE_API_URL_HOST
+		: import.meta.env.VITE_BASE_API_URL;
+
+export const socket = io(URL);

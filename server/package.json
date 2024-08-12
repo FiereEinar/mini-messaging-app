@@ -20,7 +20,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "nodemon -e ts --exec \"npm run app\"",
-		"app": "npx ts-node app.ts"
+		"app": "npx ts-node server.ts"
 	},
 	"keywords": [],
 	"author": "",

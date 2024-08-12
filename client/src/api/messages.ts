@@ -1,7 +1,10 @@
 import { Message, MessageBody } from '@/types/message';
 import axios from 'axios';
 
-const BASE_API_URL: string = import.meta.env.VITE_BASE_API_URL;
+const BASE_API_URL: string =
+	import.meta.env.VITE_DEV_TYPE === 'host'
+		? import.meta.env.VITE_BASE_API_URL_HOST
+		: import.meta.env.VITE_BASE_API_URL;
 
 export async function fetchMessages(): Promise<Message[] | undefined> {
 	try {

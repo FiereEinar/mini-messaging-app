@@ -50,7 +50,7 @@ export default function CreateMessageForm() {
 		<>
 			<form
 				onSubmit={handleSubmit(onSubmitHandler)}
-				className='flex gap-1 flex-shrink-0'
+				className='flex flex-shrink-0'
 			>
 				<Input {...register('message')} placeholder='Send a message...' />
 				<Button disabled={isSubmitting}>Send</Button>
