@@ -1,13 +1,13 @@
 import { fetchMessages } from '@/api/messages';
+import { useUserStore } from '@/store/user';
 import { useQuery } from '@tanstack/react-query';
 
 export default function ChatFeed() {
+	const currentUser = useUserStore((state) => state.user);
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['messages'],
 		queryFn: fetchMessages,
 	});
-
-	const user = 'Admin';
 
 	if (isLoading) {
 		return <p>Loading...</p>;
@@ -21,12 +21,12 @@ export default function ChatFeed() {
 		<div className='flex flex-col flex-grow gap-3'>
 			{data?.map((message) => (
 				<div
-					className={`${user === message.sender && 'ml-auto'}`}
+					className={`${currentUser === message.sender && 'ml-auto'}`}
 					key={message.id}
 				>
 					<p style={{ whiteSpace: 'pre-wrap' }}>{message.message}</p>
 					<small>
-						By: {user === message.sender ? 'You' : message.sender} on{' '}
+						By: {currentUser === message.sender ? 'You' : message.sender} on{' '}
 						{new Date(message.date).toLocaleDateString()}
 					</small>
 				</div>

@@ -2,11 +2,13 @@ import { messageSchema } from '@/lib/validations/messageSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldValues, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
-import { Textarea } from './ui/textarea';
 import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
+import { useUserStore } from '@/store/user';
+import { Input } from './ui/input';
 
 export default function CreateMessageForm() {
+	const currentUser = useUserStore((state) => state.user);
 	const queryClient = useQueryClient();
 	const {
 		register,
@@ -18,10 +20,15 @@ export default function CreateMessageForm() {
 
 	const onSubmitHandler = async (data: FieldValues) => {
 		try {
+			if (!currentUser) {
+				setError('root', { message: 'Current user name is empty' });
+				return;
+			}
+
 			const BASE_API_URL: string = import.meta.env.VITE_BASE_API_URL;
 			const formData = {
 				message: data.message,
-				sender: 'Admin',
+				sender: currentUser,
 			};
 
 			const { data: result } = await axios.post(
@@ -44,11 +51,7 @@ export default function CreateMessageForm() {
 	return (
 		<>
 			<form onSubmit={handleSubmit(onSubmitHandler)} className='flex gap-1'>
-				<Textarea
-					{...register('message')}
-					rows={1}
-					placeholder='Send a message...'
-				/>
+				<Input {...register('message')} placeholder='Send a message...' />
 				<Button disabled={isSubmitting}>Send</Button>
 			</form>
 			{errors.root && (
