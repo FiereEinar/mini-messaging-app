@@ -36,12 +36,8 @@ export default function ChatFeed() {
 		return <p>An error occured while fetching messages</p>;
 	}
 
-	if (data) {
-		console.log(data[0].date.toString().split('T')[0]);
-	}
-
 	return (
-		<div className='flex flex-col overflow-y-scroll gap-3 p-3'>
+		<div className='flex flex-grow flex-col overflow-y-scroll gap-3 p-3'>
 			{data?.map((message, i, messages) => (
 				<div className='flex flex-col items-center' key={message.id}>
 					{i !== 0 &&
