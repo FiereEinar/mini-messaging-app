@@ -2,10 +2,10 @@ import { messageSchema } from '@/lib/validations/messageSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldValues, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
-import axios from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/store/user';
 import { Input } from './ui/input';
+import { createMessage } from '@/api/messages';
 
 export default function CreateMessageForm() {
 	const currentUser = useUserStore((state) => state.user);
@@ -25,16 +25,12 @@ export default function CreateMessageForm() {
 				return;
 			}
 
-			const BASE_API_URL: string = import.meta.env.VITE_BASE_API_URL;
 			const formData = {
 				message: data.message,
 				sender: currentUser,
 			};
 
-			const { data: result } = await axios.post(
-				`${BASE_API_URL}/messages`,
-				formData
-			);
+			const result = await createMessage(formData);
 
 			if (!result.success) {
 				setError('root', { message: result.message });

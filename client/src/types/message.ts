@@ -4,3 +4,8 @@ export interface Message {
 	sender: string;
 	date: Date;
 }
+
+export interface MessageBody {
+	message: string;
+	sender: string;
+}
