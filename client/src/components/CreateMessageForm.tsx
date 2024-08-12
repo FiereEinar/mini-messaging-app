@@ -2,14 +2,15 @@ import { messageSchema } from '@/lib/validations/messageSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldValues, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
-import { useQueryClient } from '@tanstack/react-query';
+// import { useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/store/user';
 import { Input } from './ui/input';
 import { createMessage } from '@/api/messages';
+import { socket } from '@/socket';
 
 export default function CreateMessageForm() {
 	const currentUser = useUserStore((state) => state.user);
-	const queryClient = useQueryClient();
+	// const queryClient = useQueryClient();
 	const {
 		register,
 		handleSubmit,
@@ -32,13 +33,14 @@ export default function CreateMessageForm() {
 
 			const result = await createMessage(formData);
 
-			if (!result.success) {
+			if (!result?.success) {
 				setError('root', { message: result.message });
 				return;
 			}
 
+			socket.emit('message');
 			reset();
-			queryClient.invalidateQueries({ queryKey: ['messages'] });
+			// queryClient.invalidateQueries({ queryKey: ['messages'] });
 		} catch (err) {
 			setError('root', { message: 'Failed to send message' });
 			console.error('Failed to send message', err);
@@ -46,7 +48,10 @@ export default function CreateMessageForm() {
 	};
 	return (
 		<>
-			<form onSubmit={handleSubmit(onSubmitHandler)} className='flex gap-1'>
+			<form
+				onSubmit={handleSubmit(onSubmitHandler)}
+				className='flex gap-1 flex-shrink-0'
+			>
 				<Input {...register('message')} placeholder='Send a message...' />
 				<Button disabled={isSubmitting}>Send</Button>
 			</form>

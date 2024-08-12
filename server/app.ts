@@ -1,9 +1,34 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { Server } from 'socket.io';
+import { createServer } from 'http';
 import { HttpError } from './errors/httpError';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+	cors: {
+		origin: '*',
+	},
+});
+app.use(
+	cors({
+		origin: '*',
+	})
+);
+
+io.on('connection', (socket) => {
+	console.log('someone connected', socket.id);
+
+	socket.on('message', () => {
+		console.log('someone sent a message, emitting event...');
+		io.emit('message_sent');
+	});
+
+	socket.on('disconnect', () => {
+		console.log('A user disconnected');
+	});
+});
 
 import messageRouter from './routes/message';
 
@@ -26,4 +51,7 @@ app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
 	res.json({ message: err.message, error: err });
 });
 
-app.listen(3000, () => console.log('Server is running on port 3000'));
+// httpServer.listen(3000, () => console.log('Server is running on port 3000'));
+httpServer.listen(3000, '0.0.0.0', () =>
+	console.log('Server is running on port http://0.0.0.0:3000')
+);

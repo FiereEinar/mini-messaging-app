@@ -9,10 +9,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 	const currentUser = useUserStore((state) => state.user);
 
 	return (
-		<div
-			className={`${currentUser === message.sender && 'ml-auto'}`}
-			key={message.id}
-		>
+		<div className={`${currentUser === message.sender && 'ml-auto'}`}>
 			<p style={{ whiteSpace: 'pre-wrap' }}>{message.message}</p>
 			<small>
 				By: {currentUser === message.sender ? 'You' : message.sender} on{' '}

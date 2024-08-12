@@ -9,7 +9,7 @@ function App() {
 	const currentUser = useUserStore((state) => state.user);
 
 	return (
-		<main className='relative flex flex-col h-dvh'>
+		<main className={`relative flex flex-col h-dvh`}>
 			{!currentUser && <EnterNameForm />}
 
 			<Header />
