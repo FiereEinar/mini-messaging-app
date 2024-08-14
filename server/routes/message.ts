@@ -7,10 +7,11 @@ import {
 	delete_message,
 	update_message,
 } from '../controllers/messageController';
+import { auth } from '../middlewares/auth';
 
-router.get('/', get_messages);
-router.post('/', create_message);
-router.put('/:messageID', update_message);
-router.delete('/:messageID', delete_message);
+router.get('/', auth, get_messages);
+router.post('/', auth, create_message);
+router.put('/:messageID', auth, update_message);
+router.delete('/:messageID', auth, delete_message);
 
 export default router;
