@@ -141,3 +141,35 @@ export const logout = asyncHandler(async (req, res) => {
 
 	res.sendStatus(204);
 });
+
+export const isAuthenticated = asyncHandler(async (req, res) => {
+	const token = req.cookies?.jwt_token as string;
+
+	if (!token) {
+		res.sendStatus(401);
+		return;
+	}
+
+	const user = await prisma.user.findFirst({
+		where: {
+			token: token,
+		},
+	});
+
+	if (!user) {
+		res.sendStatus(403);
+		return;
+	}
+
+	const jwtSecret = process.env.JWT_SECRET;
+	if (!jwtSecret) throw new Error('JWT SECRET NOT FOUND');
+
+	try {
+		jwt.verify(token, jwtSecret);
+	} catch (err) {
+		res.sendStatus(403);
+		return;
+	}
+
+	res.sendStatus(202);
+});
