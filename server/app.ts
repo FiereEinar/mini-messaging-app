@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { notFoundHandler } from './middlewares/not-found';
 import { errorHandler } from './middlewares/error';
 import dotenv from 'dotenv';
@@ -20,6 +21,7 @@ import authRouter from './routes/auth';
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // routes
 app.use('/messages', messageRouter);

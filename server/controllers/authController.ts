@@ -4,6 +4,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { LoginBody, SignupBody } from '../types/user';
 
+/**
+ * LOGIN
+ */
 export const login = asyncHandler(async (req, res) => {
 	const { username, password }: LoginBody = req.body;
 
@@ -29,6 +32,15 @@ export const login = asyncHandler(async (req, res) => {
 		expiresIn: '1d',
 	});
 
+	await prisma.user.update({
+		where: {
+			id: user.id,
+		},
+		data: {
+			token: token,
+		},
+	});
+
 	res.cookie('jwt_token', token, {
 		httpOnly: true,
 		secure: true,
@@ -43,6 +55,9 @@ export const login = asyncHandler(async (req, res) => {
 	});
 });
 
+/**
+ * SIGNUP
+ */
 export const signup = asyncHandler(async (req, res) => {
 	const { username, password, confirmPassword }: SignupBody = req.body;
 
@@ -64,4 +79,41 @@ export const signup = asyncHandler(async (req, res) => {
 	});
 
 	res.json({ success: true, data: result, message: 'Signup successfull' });
+});
+
+/**
+ * LOGOUT
+ */
+export const logout = asyncHandler(async (req, res) => {
+	const token = req.cookies?.jwt_token as string;
+
+	if (!token) {
+		res.sendStatus(204);
+		return;
+	}
+
+	const user = await prisma.user.findFirst({
+		where: {
+			token: token,
+		},
+	});
+
+	if (user) {
+		await prisma.user.update({
+			where: {
+				id: user.id,
+			},
+			data: {
+				token: null,
+			},
+		});
+	}
+
+	res.clearCookie('jwt_token', {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'none',
+	});
+
+	res.sendStatus(204);
 });

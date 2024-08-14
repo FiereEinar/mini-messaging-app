@@ -8,7 +8,5 @@ export const get_users = asyncHandler(async (req, res) => {
 		},
 	});
 
-	console.log(users);
-
 	res.json({ data: users, message: 'Users gathered' });
 });
