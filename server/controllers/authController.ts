@@ -3,12 +3,19 @@ import prisma from '../utils/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { LoginBody, SignupBody } from '../types/user';
+import { validationResult } from 'express-validator';
 
 /**
  * LOGIN
  */
 export const login = asyncHandler(async (req, res) => {
 	const { username, password }: LoginBody = req.body;
+
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		res.json({ success: false, message: errors.array()[0].msg });
+		return;
+	}
 
 	const user = await prisma.user.findFirst({
 		where: { username: username },
@@ -61,8 +68,25 @@ export const login = asyncHandler(async (req, res) => {
 export const signup = asyncHandler(async (req, res) => {
 	const { username, password, confirmPassword }: SignupBody = req.body;
 
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		res.json({ success: false, message: errors.array()[0].msg });
+		return;
+	}
+
 	if (password !== confirmPassword) {
 		res.json({ success: false, message: 'Passwords do not match' });
+		return;
+	}
+
+	const existingUser = await prisma.user.findFirst({
+		where: {
+			username: username,
+		},
+	});
+
+	if (existingUser) {
+		res.json({ success: false, message: 'Username already exists' });
 		return;
 	}
 
