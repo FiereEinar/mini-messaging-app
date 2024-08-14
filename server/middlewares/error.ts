@@ -8,5 +8,5 @@ export function errorHandler(
 	next: NextFunction
 ) {
 	res.status(err.status || 500);
-	res.json({ message: err.message, error: err });
+	res.json({ message: err.message, status: err.status, stack: err.stack });
 }

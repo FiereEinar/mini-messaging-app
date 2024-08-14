@@ -14,17 +14,19 @@ export const get_messages = asyncHandler(async (req, res) => {
  * CREATE A MESSAGE
  */
 export const create_message = asyncHandler(async (req, res) => {
-	const { message, sender }: { message: string; sender: string } = req.body;
+	const { message, senderID }: { message: string; senderID: number } = req.body;
 
-	if (!message || !sender) {
+	if (!message || !senderID) {
 		res.json({ success: false, data: null, message: 'Incomplete body' });
 		return;
 	}
 
+	console.log(message, senderID);
+
 	const result = await prisma.messages.create({
 		data: {
 			message: message,
-			sender: sender,
+			senderID: senderID,
 		},
 	});
 
