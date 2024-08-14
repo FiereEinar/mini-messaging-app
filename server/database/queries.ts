@@ -1,3 +1,5 @@
+// DEPRICATED, ALREADY USING PRISMA
+
 import Message from '../types/message';
 import pool from './pool';
 

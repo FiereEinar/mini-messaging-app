@@ -1,16 +1,11 @@
 import asyncHandler from 'express-async-handler';
-import {
-	createMessage,
-	deleteMessage,
-	getMessages,
-	updateMessage,
-} from '../database/queries';
+import prisma from '../utils/prisma';
 
 /**
  * GET ALL MESSAGES
  */
 export const get_messages = asyncHandler(async (req, res) => {
-	const messages = await getMessages();
+	const messages = await prisma.messages.findMany();
 
 	res.json({ success: true, data: messages, message: 'Messages gathered' });
 });
@@ -26,7 +21,14 @@ export const create_message = asyncHandler(async (req, res) => {
 		return;
 	}
 
-	await createMessage(message, sender);
+	const result = await prisma.messages.create({
+		data: {
+			message: message,
+			sender: sender,
+		},
+	});
+
+	console.log(result);
 
 	res.json({ success: true, data: null, message: 'Message created' });
 });
@@ -43,7 +45,12 @@ export const update_message = asyncHandler(async (req, res) => {
 		return;
 	}
 
-	await updateMessage(message, messageID);
+	await prisma.messages.update({
+		where: { id: parseInt(messageID) },
+		data: {
+			message: message,
+		},
+	});
 
 	res.json({ success: true, data: null, message: 'Message updated' });
 });
@@ -54,7 +61,9 @@ export const update_message = asyncHandler(async (req, res) => {
 export const delete_message = asyncHandler(async (req, res) => {
 	const { messageID } = req.params;
 
-	await deleteMessage(messageID);
+	await prisma.messages.delete({
+		where: { id: parseInt(messageID) },
+	});
 
 	res.json({ success: true, data: null, message: 'Message deleted' });
 });

@@ -11,6 +11,7 @@ const client = new Client({
 	port: 5432,
 });
 
+// DEPRICATED, ALREADY USING PRISMA
 async function setupDatabase() {
 	try {
 		await client.connect();
@@ -61,7 +62,7 @@ async function setupDatabase() {
 	}
 }
 
-setupDatabase();
+// setupDatabase();
 
 const pool = new Pool({
 	host: 'localhost',
