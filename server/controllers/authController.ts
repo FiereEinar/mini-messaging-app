@@ -142,6 +142,9 @@ export const logout = asyncHandler(async (req, res) => {
 	res.sendStatus(204);
 });
 
+/**
+ * CHECK IF AUTHENICATED / COOKIES ARE VALID
+ */
 export const isAuthenticated = asyncHandler(async (req, res) => {
 	const token = req.cookies?.jwt_token as string;
 
