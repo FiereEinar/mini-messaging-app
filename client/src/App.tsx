@@ -20,7 +20,7 @@ function App() {
 		<main className='relative flex flex-col text-white h-dvh'>
 			<Header />
 			<MainContentContainer>
-				{/* <ChatFeed /> */}
+				<ChatFeed />
 				<CreateMessageForm />
 			</MainContentContainer>
 		</main>

@@ -1,11 +1,16 @@
 import asyncHandler from 'express-async-handler';
 import prisma from '../utils/prisma';
+import { CustomRequest } from '../types/request';
 
 /**
  * GET ALL MESSAGES
  */
 export const get_messages = asyncHandler(async (req, res) => {
-	const messages = await prisma.messages.findMany();
+	const messages = await prisma.messages.findMany({
+		include: {
+			sender: true,
+		},
+	});
 
 	res.json({ success: true, data: messages, message: 'Messages gathered' });
 });
@@ -13,20 +18,20 @@ export const get_messages = asyncHandler(async (req, res) => {
 /**
  * CREATE A MESSAGE
  */
-export const create_message = asyncHandler(async (req, res) => {
-	const { message, senderID }: { message: string; senderID: number } = req.body;
+export const create_message = asyncHandler(async (req: CustomRequest, res) => {
+	const { message }: { message: string } = req.body;
 
-	if (!message || !senderID) {
-		res.json({ success: false, data: null, message: 'Incomplete body' });
+	if (!message || !req.user?.id) {
+		res.json({ success: false, data: null, message: 'Incomplete data' });
 		return;
 	}
 
-	console.log(message, senderID);
+	console.log(message);
 
 	const result = await prisma.messages.create({
 		data: {
 			message: message,
-			senderID: senderID,
+			senderID: req.user?.id,
 		},
 	});
 

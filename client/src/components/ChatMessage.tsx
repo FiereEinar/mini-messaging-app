@@ -11,15 +11,17 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 	return (
 		<div
 			className={`w-full flex flex-col ${
-				currentUser === message.sender && 'ml-auto items-end'
+				currentUser === message.sender.username && 'ml-auto items-end'
 			}`}
 		>
 			<small className='px-3 text-dark-500'>
-				{currentUser === message.sender ? 'You' : message.sender}
+				{currentUser === message.sender.username
+					? 'You'
+					: message.sender.username}
 			</small>
 			<p
 				className={`bg-dark-300 size-fit p-2 px-3 rounded-2xl ${
-					currentUser === message.sender && 'text-end'
+					currentUser === message.sender.username && 'text-end'
 				}`}
 				style={{ whiteSpace: 'pre-wrap' }}
 			>
