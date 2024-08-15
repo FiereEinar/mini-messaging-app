@@ -57,7 +57,9 @@ export default function CreateMessageForm() {
 					className='bg-dark-200 border-dark-400'
 					placeholder='Send a message...'
 				/>
-				<Button disabled={isSubmitting}>Send</Button>
+				<Button variant='secondary' disabled={isSubmitting}>
+					Send
+				</Button>
 			</form>
 			{errors.root && (
 				<small className='text-red-500'>{errors.root.message}</small>

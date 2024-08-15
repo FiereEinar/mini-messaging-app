@@ -74,7 +74,7 @@ export default function LoginForm() {
 					)}
 
 					<div className='flex justify-end'>
-						<Button disabled={isSubmitting} type='submit'>
+						<Button variant='secondary' disabled={isSubmitting} type='submit'>
 							Submit
 						</Button>
 					</div>
