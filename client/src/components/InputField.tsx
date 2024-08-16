@@ -8,7 +8,8 @@ interface InputFieldProps {
 	id: string;
 	name: string;
 	type: React.HTMLInputTypeAttribute;
-	registerFn: UseFormRegister<FieldValues>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	registerFn: UseFormRegister<any>;
 	errors: FieldErrors<FieldValues>;
 }
 

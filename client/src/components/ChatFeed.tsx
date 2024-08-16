@@ -2,7 +2,8 @@ import { fetchMessages } from '@/api/messages';
 import { useQuery } from '@tanstack/react-query';
 import ChatMessage from './ChatMessage';
 import { useEffect, useRef } from 'react';
-import { socket } from '@/socket';
+import { isDateEqual } from '@/lib/utils';
+import useSocket from '@/hooks/useSocket';
 
 export default function ChatFeed() {
 	const bottomRef = useRef<HTMLDivElement>(null);
@@ -11,16 +12,9 @@ export default function ChatFeed() {
 		queryFn: fetchMessages,
 	});
 
-	useEffect(() => {
-		socket.on('message_sent', () => {
-			console.log('recieved a message emit event');
-			refetch();
-		});
-
-		return () => {
-			socket.off('message_sent');
-		};
-	}, [refetch]);
+	useSocket('message_sent', () => {
+		refetch();
+	});
 
 	useEffect(() => {
 		if (data && bottomRef.current) {
@@ -40,13 +34,11 @@ export default function ChatFeed() {
 		<div className='flex flex-grow flex-col overflow-y-scroll gap-3 p-3'>
 			{data?.map((message, i, messages) => (
 				<div className='flex flex-col items-center' key={message.id}>
-					{i !== 0 &&
-						message.date.toString().split('T')[0] !==
-							messages[i - 1].date.toString().split('T')[0] && (
-							<p className='m-auto'>
-								{new Date(message.date).toLocaleDateString()}
-							</p>
-						)}
+					{i !== 0 && !isDateEqual(message.date, messages[i - 1].date) && (
+						<p className='m-auto text-dark-500'>
+							{new Date(message.date).toLocaleDateString()}
+						</p>
+					)}
 					<ChatMessage message={message} />
 				</div>
 			))}

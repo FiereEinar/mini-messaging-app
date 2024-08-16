@@ -7,6 +7,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import HeaderText from './ui/header-text';
 import axiosInstance from '@/api/axiosInstance';
 import ErrorText from './ui/error-text';
+import { z } from 'zod';
+
+type FormValues = z.infer<typeof signupSchema>;
 
 export default function SignupForm() {
 	const navigate = useNavigate();
@@ -15,7 +18,7 @@ export default function SignupForm() {
 		handleSubmit,
 		setError,
 		formState: { errors, isSubmitting },
-	} = useForm({
+	} = useForm<FormValues>({
 		resolver: zodResolver(signupSchema),
 	});
 

@@ -8,6 +8,9 @@ import HeaderText from './ui/header-text';
 import axiosInstance from '@/api/axiosInstance';
 import ErrorText from './ui/error-text';
 import { useUserStore } from '@/store/user';
+import { z } from 'zod';
+
+type FormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
 	const setUser = useUserStore((state) => state.setUser);
@@ -17,7 +20,7 @@ export default function LoginForm() {
 		handleSubmit,
 		setError,
 		formState: { errors, isSubmitting },
-	} = useForm({
+	} = useForm<FormValues>({
 		resolver: zodResolver(loginSchema),
 	});
 

@@ -2,22 +2,24 @@ import { messageSchema } from '@/lib/validations/messageSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldValues, useForm } from 'react-hook-form';
 import { Button } from './ui/button';
-// import { useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/store/user';
 import { Input } from './ui/input';
 import { createMessage } from '@/api/messages';
 import { socket } from '@/socket';
+import { z } from 'zod';
+import ErrorText from './ui/error-text';
+
+type FormValues = z.infer<typeof messageSchema>;
 
 export default function CreateMessageForm() {
 	const currentUser = useUserStore((state) => state.user);
-	// const queryClient = useQueryClient();
 	const {
 		register,
 		handleSubmit,
 		reset,
 		setError,
 		formState: { errors, isSubmitting },
-	} = useForm({ resolver: zodResolver(messageSchema) });
+	} = useForm<FormValues>({ resolver: zodResolver(messageSchema) });
 
 	const onSubmitHandler = async (data: FieldValues) => {
 		try {
@@ -40,12 +42,12 @@ export default function CreateMessageForm() {
 
 			socket.emit('message');
 			reset();
-			// queryClient.invalidateQueries({ queryKey: ['messages'] });
 		} catch (err) {
 			setError('root', { message: 'Failed to send message' });
 			console.error('Failed to send message', err);
 		}
 	};
+
 	return (
 		<>
 			<form
@@ -54,15 +56,19 @@ export default function CreateMessageForm() {
 			>
 				<Input
 					{...register('message')}
-					className='bg-dark-200 border-dark-400'
+					className='bg-dark-200 border-dark-400 rounded-r-none'
 					placeholder='Send a message...'
 				/>
-				<Button variant='secondary' disabled={isSubmitting}>
+				<Button
+					className='rounded-l-none'
+					variant='secondary'
+					disabled={isSubmitting}
+				>
 					Send
 				</Button>
 			</form>
-			{errors.root && (
-				<small className='text-red-500'>{errors.root.message}</small>
+			{errors.root && errors.root.message && (
+				<ErrorText message={errors.root.message} />
 			)}
 		</>
 	);
