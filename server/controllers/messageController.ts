@@ -26,16 +26,12 @@ export const create_message = asyncHandler(async (req: CustomRequest, res) => {
 		return;
 	}
 
-	console.log(message);
-
 	const result = await prisma.messages.create({
 		data: {
 			message: message,
 			senderID: req.user?.id,
 		},
 	});
-
-	console.log(result);
 
 	res.json({ success: true, data: null, message: 'Message created' });
 });
